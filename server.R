@@ -1,7 +1,6 @@
 ## Load shiny library
 library(shiny)
 library(httr)
-library(jsonlite)
 ## Standard shinyserver function to caculate the outputs to be displayed
 shinyServer(
         function(input, output) {
@@ -11,9 +10,9 @@ shinyServer(
                 output$sum <- reactive(paste(input$sum, input$from))
                   
                 output$converted <- reactive({
-                        rate <- fromJSON(paste0("http://rate-exchange.appspot.com/currency?from=", 
-                                                          input$from, "&to=", input$to))
-                        converted <- paste((input$sum*rate$rate), input$to)
+                        rate <- read.csv(paste0("http://quote.yahoo.com/d/quotes.csv?s=", 
+                                   input$from, input$to, "=X&f=sl1&e=.csv"), header = FALSE)
+                        converted <- paste((input$sum*rate$V2), input$to)
                         })                
         }
 )
